@@ -13,15 +13,18 @@ def create_board(n, values):
 def touch_token(board, row, column):
   if row > board.shape[0]-1 or column > board.shape[1]-1:
     raise Exception("Invalid coordinate")
-  flip_token(board, row, column)
+
+  new_board = np.copy(board)
+  flip_token(new_board, row, column)
   if row != 0:
-    flip_token(board,row-1,column)
-  if row != board.shape[0]-1:
-    flip_token(board, row+1,column)
+    flip_token(new_board,row-1,column)
+  if row != new_board.shape[0]-1:
+    flip_token(new_board, row+1,column)
   if column != 0:
-    flip_token(board, row, column-1)
-  if column != board.shape[1] - 1:
-    flip_token(board, row, column+1)
+    flip_token(new_board, row, column-1)
+  if column != new_board.shape[1] - 1:
+    flip_token(new_board, row, column+1)
+  return new_board
 
 def flip_token(board, row, column):
   board[row][column] = not board[row][column]
