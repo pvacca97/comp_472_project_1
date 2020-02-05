@@ -1,7 +1,9 @@
-import numpy as np
 import itertools
-from graph_node import GraphNode
+import numpy as np
+
 from board import touch_token
+from graph_node import GraphNode
+
 
 def dfs(board, max_d):
     root_node = GraphNode(board)
@@ -14,30 +16,29 @@ def dfs(board, max_d):
     while len(open) != 0:
 
         # take first node in open list and check for goal state
-        currentNode = open.pop(0)
-        print(currentNode.state)
-        if (np.array_equal(currentNode.state, goal_state)):
+        current_node = open.pop(0)
+        if np.array_equal(current_node.state, goal_state):
             print("Found solution!")
-            print(currentNode.state)
+            print(current_node.state)
             return
 
         # skip current node if the max depth is reached
-        elif currentNode.depth == max_d:
+        elif current_node.depth == max_d:
+            closed.append(current_node)
             continue
 
         # generate children of current node, discard ones with state equal to any node in closed or open list
         for i, j in itertools.product(range(board_size), range(board_size)):
-            child_state = touch_token(currentNode.state, i, j)
+            child_state = touch_token(current_node.state, i, j)
             if any(np.array_equal(node.state, child_state) for node in closed) or \
                     any(np.array_equal(node.state, child_state) for node in open):
                 continue
-            child_node = GraphNode(child_state, currentNode, (i,j))
+            child_node = GraphNode(child_state, current_node, (i, j))
 
             # put each child on left end of open list
             open.insert(0, child_node)
 
         # put X on closed
-        closed.append(currentNode)
-
+        closed.append(current_node)
 
     print("No solution found")
