@@ -9,7 +9,7 @@ class GraphNode:
         self.last_touched_token = last_touched_token
         self.children = []
         if parent is None:  # For root node
-            self.depth = 0
+            self.depth = 1
         else:
             self.depth = parent.depth + 1
             parent.children.append(self)

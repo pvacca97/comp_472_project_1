@@ -8,7 +8,7 @@ file_name = sys.argv[1]
 file = open(file_name, 'r')
 
 for line in file:
-  line.split()
+  line = line.split()
   n = int(line[0])
   max_d = int(line[1])
   max_l = int(line[2])
