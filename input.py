@@ -1,8 +1,8 @@
 import logging as log
 import sys
 from board import create_board, touch_token
-from graph_node import GraphNode
 from dfs import dfs
+from graph_node import GraphNode
 
 n = int(sys.argv[1])
 max_d = int(sys.argv[2])

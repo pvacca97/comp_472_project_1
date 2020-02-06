@@ -19,7 +19,14 @@ def dfs(board, max_d):
         current_node = open.pop(0)
         if np.array_equal(current_node.state, goal_state):
             print("Found solution!")
-            print(current_node.state)
+            print("Solution path:")
+            solution_path = []
+            current_solution_node = current_node
+            while current_solution_node is not None:
+                solution_path.insert(0,current_solution_node)
+                current_solution_node = current_solution_node.parent
+            for i in range(len(solution_path)):
+                print(solution_path[i].get_action_and_state())
             return
 
         # skip current node if the max depth is reached
