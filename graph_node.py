@@ -8,6 +8,8 @@ class GraphNode:
         self.parent = parent
         self.last_touched_token = last_touched_token
         self.children = []
+        white_token_positions = np.where(self.state.flatten() == 0)
+        self.first_white_token_position = white_token_positions[0][0] if len(white_token_positions[0]) != 0 else 9
         if parent is None:  # For root node
             self.depth = 1
         else:

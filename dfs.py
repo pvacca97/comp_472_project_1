@@ -23,27 +23,27 @@ def dfs(board, max_d):
             solution_path = []
             current_solution_node = current_node
             while current_solution_node is not None:
-                solution_path.insert(0,current_solution_node)
+                solution_path.insert(0, current_solution_node)
                 current_solution_node = current_solution_node.parent
             for i in range(len(solution_path)):
                 print(solution_path[i].get_action_and_state())
             return
 
-        # skip current node if the max depth is reached
-        elif current_node.depth == max_d:
-            closed.append(current_node)
-            continue
+        # Only add children of current node if the max depth is not reached
+        elif current_node.depth != max_d:
+            child_nodes = []
+            # generate children of current node, discard ones with state equal to any node in closed or open list
+            for i, j in itertools.product(range(board_size), range(board_size)):
+                child_state = touch_token(current_node.state, i, j)
+                if not any(np.array_equal(node.state, child_state) for node in closed) and \
+                        not any(np.array_equal(node.state, child_state) for node in open):
+                    child_nodes.append(GraphNode(child_state, current_node, (i, j)))
 
-        # generate children of current node, discard ones with state equal to any node in closed or open list
-        for i, j in itertools.product(range(board_size), range(board_size)):
-            child_state = touch_token(current_node.state, i, j)
-            if any(np.array_equal(node.state, child_state) for node in closed) or \
-                    any(np.array_equal(node.state, child_state) for node in open):
-                continue
-            child_node = GraphNode(child_state, current_node, (i, j))
+            # order child nodes by position of first white token
+            child_nodes.sort(key=lambda node: node.first_white_token_position)
 
-            # put each child on left end of open list
-            open.insert(0, child_node)
+            # put every node in list of ordered child nodes at the front of open list
+            open = child_nodes + open
 
         # put X on closed
         closed.append(current_node)
