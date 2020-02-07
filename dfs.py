@@ -10,6 +10,8 @@ def dfs(board, max_d):
     open_nodes = [root_node] # list of nodes to visit next, in order of priority
     closed_nodes = [] # list of nodes already visited
     open_and_closed_hash = set([np.array2string(root_node.state)]) # keeps track of all nodes in open/closed lists
+    solution_path = []
+    searched_nodes = []
 
     board_size = root_node.state.shape[0]
     goal_state = np.zeros((board_size, board_size), dtype=np.uint8)
@@ -18,19 +20,14 @@ def dfs(board, max_d):
 
         # take first node in open list and check for goal state
         current_node = open_nodes.pop(0)
+        searched_nodes.append(current_node)
+
         if np.array_equal(current_node.state, goal_state):
-            print("Found solution!")
-            print("Solution path:")
-            solution_path = []
             current_solution_node = current_node
             while current_solution_node is not None:
                 solution_path.insert(0, current_solution_node)
                 current_solution_node = current_solution_node.parent
-
-            # TODO The following lines print the solution path. Move to solution output file.
-            for i in range(len(solution_path)):
-                print(solution_path[i].get_action_and_state())
-            return
+            return searched_nodes, solution_path
 
         # generate children of current node if the max depth is not reached
         elif current_node.depth != max_d:
@@ -52,4 +49,5 @@ def dfs(board, max_d):
 
         # put node on closed list
         closed_nodes.append(current_node)
-    print("No solution found")
+
+    return searched_nodes, solution_path

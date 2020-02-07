@@ -1,5 +1,7 @@
 import logging as log
 import sys
+import time
+
 from board import create_board, touch_token
 from dfs import dfs
 from graph_node import GraphNode
@@ -18,5 +20,17 @@ for line in file:
     print(board.shape)
     print(board)
 
-  dfs(board, max_d)
+    results = dfs(board, max_d)
+    searched_nodes = results[0]
+    solution_path = results[1]
+
+    # TODO Make solution output file, and move to solution output file.
+    if len(solution_path) == 0:
+        print('no solution')
+    else:
+        for i in range(len(solution_path)):
+            print(solution_path[i].get_action_and_state())
+
+    # TODO make search output file
+
 file.close()
