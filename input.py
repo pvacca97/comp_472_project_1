@@ -14,6 +14,7 @@ for line in file:
     max_l = int(line[2])
     values = line[3]
     solution_file = open(str(num_lines_in_file) + "_dfs_solution.txt", "w")
+    search_file = open(str(num_lines_in_file) + "_dfs_search.txt", "w")
     num_lines_in_file += 1
 
     board = create_board(n, values)
@@ -31,6 +32,8 @@ for line in file:
             solution_file.write(solution_path[i].get_action_and_state() + '\n')
 
         # TODO make search output file
+    for i in range(len(searched_nodes)):
+            search_file.write(searched_nodes[i].get_action_and_state() + '\n')
 
 file.close()
 
