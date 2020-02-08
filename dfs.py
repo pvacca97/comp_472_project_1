@@ -7,9 +7,9 @@ from graph_node import GraphNode
 
 def dfs(board, max_d):
     root_node = GraphNode(board)
-    open_nodes = [root_node] # list of nodes to visit next, in order of priority
-    closed_nodes = [] # list of nodes already visited
-    open_and_closed_hash = set([np.array2string(root_node.state)]) # keeps track of all nodes in open/closed lists
+    open_nodes = [root_node]  # list of nodes to visit next, in order of priority
+    closed_nodes = []  # list of nodes already visited
+    open_and_closed_hash = set([np.array2string(root_node.state)])  # keeps track of all nodes in open/closed lists
     solution_path = []
     searched_nodes = []
 
