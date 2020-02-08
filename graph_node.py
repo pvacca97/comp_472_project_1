@@ -17,7 +17,7 @@ class GraphNode:
             parent.children.append(self)
 
     # Use the following for the lines in the solution file
-    def get_solution_file_lines(self):
+    def get_solution_file_line(self):
         state_string = ''
         board_size = self.state.shape[0]
         for i, j in itertools.product(range(board_size), range(board_size)):
@@ -30,14 +30,10 @@ class GraphNode:
         else:
             return '0  ' + state_string
 
-    def get_search_file_lines(self):
+    def get_search_file_line(self):
         state_string = ''
         board_size = self.state.shape[0]
         for i, j in itertools.product(range(board_size), range(board_size)):
             state_string += str(self.state[i][j])
 
-        if self.last_touched_token is not None:
-            return '0 ' + '0 ' + '0 ' + state_string
-        else:
-            return '0  ' + state_string
-
+        return '0 0 0 ' + state_string
