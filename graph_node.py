@@ -17,11 +17,11 @@ class GraphNode:
             parent.children.append(self)
 
     # Use the following for the lines in the solution file
-    def get_action_and_state(self):
+    def get_solution_file_lines(self):
         state_string = ''
         board_size = self.state.shape[0]
         for i, j in itertools.product(range(board_size), range(board_size)):
-            state_string += ' ' + str(self.state[i][j])
+            state_string += str(self.state[i][j])
 
         if self.last_touched_token is not None:
             row = chr(self.last_touched_token[0] + 65)
@@ -29,3 +29,15 @@ class GraphNode:
             return row + column + ' ' + state_string
         else:
             return '0  ' + state_string
+
+    def get_search_file_lines(self):
+        state_string = ''
+        board_size = self.state.shape[0]
+        for i, j in itertools.product(range(board_size), range(board_size)):
+            state_string += str(self.state[i][j])
+
+        if self.last_touched_token is not None:
+            return '0 ' + '0 ' + '0 ' + state_string
+        else:
+            return '0  ' + state_string
+

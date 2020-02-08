@@ -29,11 +29,10 @@ for line in file:
         solution_file.write('no solution')
     else:
         for i in range(len(solution_path)):
-            solution_file.write(solution_path[i].get_action_and_state() + '\n')
+            solution_file.write(solution_path[i].get_solution_file_lines() + '\n')
 
-        # TODO make search output file
     for i in range(len(searched_nodes)):
-            search_file.write(searched_nodes[i].get_action_and_state() + '\n')
+            search_file.write(searched_nodes[i].get_search_file_lines() + '\n')
 
 file.close()
 
