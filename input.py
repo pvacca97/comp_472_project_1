@@ -18,8 +18,6 @@ for line in file:
     num_lines_in_file += 1
 
     board = create_board(n, values)
-    print(board.shape)
-    print(board)
 
     results = dfs(board, max_d)
     searched_nodes = results[0]
