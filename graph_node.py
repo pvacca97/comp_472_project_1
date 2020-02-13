@@ -8,7 +8,7 @@ class GraphNode:
         self.parent = parent
         self.last_touched_token = last_touched_token
         self.children = []
-        white_token_positions = np.where(self.state.flatten() == 0)
+        self.white_token_positions = np.where(self.state.flatten() == 0)
         self.first_white_token_position = white_token_positions[0][0] if len(white_token_positions[0]) != 0 else 9
         if parent is None:  # For root node
             self.depth = 1
@@ -37,3 +37,10 @@ class GraphNode:
             state_string += str(self.state[i][j])
 
         return '0 0 0 ' + state_string
+
+
+# Used only in informed searches (BFS and A*)
+class InformedSearchGraphNode(GraphNode, state, parent=None, last_touched_token=None):
+    def __init__(self):
+        super().__init__(state, parent, last_touched_token)
+        self.heuristic_value = 1  # Should replace with real heuristic eventually
