@@ -11,7 +11,6 @@ def dfs(board, max_d):
     closed_nodes = []  # list of nodes already visited
     open_and_closed_hash = set([np.array2string(root_node.state)])  # keeps track of all nodes in open/closed lists
     solution_path = []
-    searched_nodes = []
 
     board_size = root_node.state.shape[0]
     goal_state = np.zeros((board_size, board_size), dtype=np.uint8)
@@ -20,14 +19,14 @@ def dfs(board, max_d):
 
         # take first node in open list and check for goal state
         current_node = open_nodes.pop(0)
-        searched_nodes.append(current_node)
 
         if np.array_equal(current_node.state, goal_state):
             current_solution_node = current_node
             while current_solution_node is not None:
                 solution_path.insert(0, current_solution_node)
                 current_solution_node = current_solution_node.parent
-            return searched_nodes, solution_path
+            closed_nodes.append(current_node)
+            return closed_nodes, solution_path
 
         # generate children of current node if the max depth is not reached
         elif current_node.depth != max_d:
@@ -42,7 +41,7 @@ def dfs(board, max_d):
                     open_and_closed_hash.add(np.array2string(child_state))
 
             # order child nodes by position of first white token
-            child_nodes.sort(key=lambda node: node.first_white_token_position)
+            child_nodes.sort(key=lambda node: node.get_first_white_token_position())
 
             # put every node in list of ordered child nodes at the front of open list
             open_nodes = child_nodes + open_nodes
@@ -50,4 +49,4 @@ def dfs(board, max_d):
         # put node on closed list
         closed_nodes.append(current_node)
 
-    return searched_nodes, solution_path
+    return closed_nodes, solution_path
