@@ -27,19 +27,30 @@ class GraphNode:
     def get_better_h_val(self):
         heuristic_value = 0
         board_size = self.state.shape[0]
+
         for row, column in itertools.product(range(board_size), range(board_size)):
+            max_num_of_points = 6  # num of tokens to be compared + 1
             token_value = 1
             if self.state[row][column] == 0:
                 token_value += 1
             if row != 0 and self.state[row - 1][column] == 0:
                 token_value += 1
+            else:
+                max_num_of_points -= 1
             if row != board_size - 1 and self.state[row + 1][column] == 0:
                 token_value += 1
+            else:
+                max_num_of_points -= 1
             if column != 0 and self.state[row][column - 1] == 0:
                 token_value += 1
-            if column != board_size - 1 and self.state[row][column + 1]:
+            else:
+                max_num_of_points -= 1
+            if column != board_size - 1 and self.state[row][column + 1] == 0:
                 token_value += 1
-            heuristic_value += token_value % 6
+            else:
+                max_num_of_points -= 1
+            print(token_value)
+            heuristic_value += token_value % max_num_of_points
         return heuristic_value
 
     # This returns the number of black dots on the board
