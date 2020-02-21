@@ -17,8 +17,9 @@ class GraphNode:
         first_white_token_position = white_token_positions[0][0] if len(white_token_positions[0]) != 0 else 9
         return first_white_token_position
 
+    # Returns the heuristic value for the node
     def get_hn(self):
-        return np.count_nonzero(self.state == 1)
+        return self.get_num_black_dots()
 
     def get_fn(self):
         return self.get_hn() + self.depth
@@ -40,6 +41,12 @@ class GraphNode:
                 token_value += 1
             heuristic_value += token_value % 6
         return heuristic_value
+
+    # This returns the number of black dots on the board
+    def get_num_black_dots(self):
+        return np.count_nonzero(self.state == 1)
+
+
 
     # Use the following for the lines in the solution file
     def get_solution_file_line(self):

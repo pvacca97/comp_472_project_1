@@ -18,13 +18,13 @@ def touch_token(board, row, column):
     new_board = np.copy(board)
     flip_token(new_board, row, column)
     if row != 0:
-        flip_token(new_board, row - 1, column)
+        flip_token(new_board, row - 1, column) # Token above
     if row != new_board.shape[0] - 1:
-        flip_token(new_board, row + 1, column)
+        flip_token(new_board, row + 1, column) # Token below
     if column != 0:
-        flip_token(new_board, row, column - 1)
+        flip_token(new_board, row, column - 1) # Token to the left
     if column != new_board.shape[1] - 1:
-        flip_token(new_board, row, column + 1)
+        flip_token(new_board, row, column + 1) # Token to the right
     return new_board
 
 
