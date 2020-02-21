@@ -23,12 +23,30 @@ class GraphNode:
     def get_fn(self):
         return self.get_hn() + self.depth
 
+    def get_better_h_val(self):
+        heuristic_value = 0
+        board_size = self.state.shape[0]
+        for row, column in itertools.product(range(board_size), range(board_size)):
+            token_value = 1
+            if self.state[row][column] == 0:
+                token_value += 1
+            if row != 0 and self.state[row - 1][column] == 0:
+                token_value += 1
+            if row != board_size - 1 and self.state[row + 1][column] == 0:
+                token_value += 1
+            if column != 0 and self.state[row][column - 1] == 0:
+                token_value += 1
+            if column != board_size - 1 and self.state[row][column + 1]:
+                token_value += 1
+            heuristic_value += token_value % 6
+        return heuristic_value
+
     # Use the following for the lines in the solution file
     def get_solution_file_line(self):
         state_string = ''
         board_size = self.state.shape[0]
-        for i, j in itertools.product(range(board_size), range(board_size)):
-            state_string += str(self.state[i][j])
+        for row, column in itertools.product(range(board_size), range(board_size)):
+            state_string += str(self.state[row][column])
 
         if self.last_touched_token is not None:
             row = chr(self.last_touched_token[0] + 65)
