@@ -1,7 +1,7 @@
 import sys
 
 from board import create_board, touch_token
-from dfs import dfs
+from dfs import DepthFirstSearch
 
 file_name = sys.argv[1]
 input_file = open(file_name, 'r')
@@ -20,9 +20,8 @@ for line in input_file:
 
     board = create_board(n, values)
 
-    results = dfs(board, max_d)
-    searched_nodes = results[0]
-    solution_path = results[1]
+    dfs = DepthFirstSearch(board, max_d, max_l)
+    searched_nodes, solution_path = dfs.template_method()
 
     if len(solution_path) == 0:
         solution_file.write('no solution')
