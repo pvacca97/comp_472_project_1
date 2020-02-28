@@ -12,8 +12,7 @@ class BestFirstSearch(SearchFramework):
 
     def _check_goal_state(self, goal_state):
         # take first node in open list and check for goal state
-        heap_node = heapq.heappop(self.open_nodes)
-        current_node = heap_node[1]
+        current_node = heapq.heappop(self.open_nodes)
 
         # check if goal state
         if np.array_equal(current_node.state, goal_state):
@@ -42,7 +41,7 @@ class BestFirstSearch(SearchFramework):
             if np.array2string(child_state) not in self.open_and_closed_hash:
                 graph_node = GraphNode(child_state, current_node, (i, j))
                 heapq.heappush(
-                    priority_nodes, (graph_node.get_hn(), graph_node))
+                    priority_nodes, (graph_node))
                 self.open_and_closed_hash.add(np.array2string(child_state))
 
         return priority_nodes

@@ -12,8 +12,13 @@ class GraphNode:
         else:
             self.depth = parent.depth + 1
 
-    def __lt__(self, value):
-        return np.any(self.state < value.state)
+    def __lt__(self, other_node):
+        self_hn = self.get_hn()
+        other_node_hn = other_node.get_hn()
+        if self_hn == other_node_hn:
+            return self.get_first_white_token_position() < other_node.get_first_white_token_position()
+        else:
+            return self_hn < other_node_hn
 
     def get_first_white_token_position(self):
         white_token_positions = np.where(self.state.flatten() == 0)
