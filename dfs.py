@@ -29,7 +29,7 @@ class DepthFirstSearch(SearchFramework):
         if current_node.depth != self.max_d:
             return False
         else:
-            return None, True
+            return True
 
     def _generate_children(self, current_node, board_size):
         child_nodes = []
