@@ -1,4 +1,5 @@
 import itertools
+import math
 import numpy as np
 
 
@@ -152,12 +153,7 @@ class GraphNode:
                         tokens_to_check_for_current_group.add(
                             (row, column + 1))
 
-            if black_token_group_size > 0:
-                if black_token_group_size > 4:
-                    black_token_group_sizes.append(
-                        (black_token_group_size // 4)+1)
-                else:
-                    black_token_group_sizes.append(1)
+            black_token_group_sizes.append(int(math.ceil(black_token_group_size / 4)))
 
         return sum(black_token_group_sizes)
 
