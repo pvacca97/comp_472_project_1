@@ -8,6 +8,7 @@ class SearchFramework(object):
         self.board = board
         self.max_d = max_d
         self.max_l = max_l
+        self.stop_search = False
         self.open_nodes = None
         self.closed_nodes = None
         self.open_and_closed_hash = None
@@ -25,7 +26,7 @@ class SearchFramework(object):
         board_size = root_node.state.shape[0]
         goal_state = np.zeros((board_size, board_size), dtype=np.uint8)
 
-        while len(self.open_nodes) != 0:
+        while len(self.open_nodes) != 0 and self.stop_search == False:
             # take first node in open list and check for goal state
             current_node = self.open_nodes.pop(0)
 
@@ -40,7 +41,7 @@ class SearchFramework(object):
                 return self.closed_nodes, self.solution_path
 
             child_nodes, is_max = self._check_max(current_node, board_size)
-            if is_max:
+            if not is_max:
                 self._order_and_expand_children(child_nodes)
             self._append_closed_list(current_node)
 
