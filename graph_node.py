@@ -33,8 +33,11 @@ class GraphNode:
     def get_hn(self):
         return self.get_h4()
 
+    def get_gn(self):
+        return self.depth - 1
+
     def get_fn(self):
-        return self.get_hn() + (self.depth - 1)
+        return self.get_hn() + self.get_gn()
 
     # This returns the number of black dots on the board
     def get_h1(self):
@@ -65,7 +68,6 @@ class GraphNode:
                 token_value += 1
             else:
                 max_num_of_points -= 1
-            print(token_value)
             heuristic_value += token_value % max_num_of_points
         return heuristic_value
 
@@ -151,8 +153,11 @@ class GraphNode:
                             (row, column + 1))
 
             if black_token_group_size > 0:
-                black_token_group_sizes.append(
-                    (black_token_group_size // 4) + 1)
+                if black_token_group_size > 4:
+                    black_token_group_sizes.append(
+                        (black_token_group_size // 4)+1)
+                else:
+                    black_token_group_sizes.append(1)
 
         return sum(black_token_group_sizes)
 
@@ -191,6 +196,14 @@ class BFSGraphNode(GraphNode):
         else:
             return self_hn < other_node_hn
 
+    def get_search_file_line(self):
+        state_string = ''
+        board_size = self.state.shape[0]
+        for i, j in itertools.product(range(board_size), range(board_size)):
+            state_string += str(self.state[i][j])
+
+        return '0 0 ' + str(self.get_hn()) + ' ' + state_string
+
 
 class AStarGraphNode(GraphNode):
     def __init__(self, state, parent=None, last_touched_token=None):
@@ -203,3 +216,11 @@ class AStarGraphNode(GraphNode):
             return self.get_first_white_token_position() < other_node.get_first_white_token_position()
         else:
             return self_fn < other_node_fn
+
+    def get_search_file_line(self):
+        state_string = ''
+        board_size = self.state.shape[0]
+        for i, j in itertools.product(range(board_size), range(board_size)):
+            state_string += str(self.state[i][j])
+
+        return str(self.get_fn()) + ' ' + str(self.get_gn()) + ' ' + str(self.get_hn()) + ' ' + state_string
