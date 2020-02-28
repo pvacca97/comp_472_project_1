@@ -10,9 +10,25 @@ class BestFirstSearch(SearchFramework):
     def __init__(self, board, max_d, max_l):
         super().__init__(board, max_d, max_l)
 
-    def _check_max(self, current_node, board_size):
+    def _check_goal_state(self, goal_state):
+        # take first node in open list and check for goal state
+        heap_node = heapq.heappop(self.open_nodes)
+        current_node = heap_node[1]
+
+        # check if goal state
+        if np.array_equal(current_node.state, goal_state):
+            current_solution_node = current_node
+            while current_solution_node is not None:
+                self.solution_path.insert(0, current_solution_node)
+                current_solution_node = current_solution_node.parent
+            self.closed_nodes.append(current_node)
+            stop_search = True
+
+        return current_node
+
+    def _check_max(self, current_node):
         if len(self.closed_nodes) != self.max_l:
-            return self._generate_children(current_node, board_size), False
+            return False
         else:
             self.stop_search = True
 
@@ -31,9 +47,10 @@ class BestFirstSearch(SearchFramework):
 
         return priority_nodes
 
-    def _order_and_expand_children(self, child_nodes):
-        # order and expansion is done automatically through heapq (priority queue)
-        pass
+    def _order_children(self, child_nodes):
+        while child_nodes:
+            next_item = heapq.heappop(child_nodes)
+            heapq.heappush(self.open_nodes, next_item)
 
     def _append_closed_list(self, current_node):
         self.closed_nodes.append(current_node)

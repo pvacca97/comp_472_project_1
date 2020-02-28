@@ -27,28 +27,21 @@ class SearchFramework(object):
         goal_state = np.zeros((board_size, board_size), dtype=np.uint8)
 
         while len(self.open_nodes) != 0 and self.stop_search == False:
-            # take first node in open list and check for goal state
-            current_node = self.open_nodes.pop(0)
-
-            # check if goal state
-            if np.array_equal(current_node.state, goal_state):
-                current_solution_node = current_node
-                while current_solution_node is not None:
-                    self.solution_path.insert(0, current_solution_node)
-
-                    current_solution_node = current_solution_node.parent
-                self.closed_nodes.append(current_node)
-                return self.closed_nodes, self.solution_path
-
-            child_nodes, is_max = self._check_max(current_node, board_size)
+            current_node = self._check_goal_state(goal_state)
+            is_max = self._check_max(current_node)
             if not is_max:
-                self._order_and_expand_children(child_nodes)
+                child_nodes = self._generate_children(current_node, board_size)
+                self._order_children(child_nodes)
             self._append_closed_list(current_node)
 
         return self.closed_nodes, self.solution_path
 
+    @abc.abstractclassmethod
+    def _check_goal_state(self, goal_state):
+        pass
+
     @abc.abstractmethod
-    def _check_max(self, current_node, board_size):
+    def _check_max(self, current_node):
         pass
 
     @abc.abstractmethod
@@ -56,7 +49,7 @@ class SearchFramework(object):
         pass
 
     @abc.abstractmethod
-    def _order_and_expand_children(self, child_nodes):
+    def _order_children(self, child_nodes):
         pass
 
     @abc.abstractmethod
