@@ -3,13 +3,16 @@ import itertools
 import numpy as np
 
 from board import touch_token
-from graph_node import GraphNode
+from graph_node import BFSGraphNode
 from search_framework import SearchFramework
 
 
 class BestFirstSearch(SearchFramework):
     def __init__(self, board, max_d, max_l):
         super().__init__(board, max_d, max_l)
+
+    def _get_root_node(self):
+        return BFSGraphNode(self.board)
 
     def _get_next_open_list_node(self):
         return heapq.heappop(self.open_nodes)
@@ -28,9 +31,9 @@ class BestFirstSearch(SearchFramework):
 
             # discard children that have states already in the open or closed lists (all generated nodes)
             if np.array2string(child_state) not in self.open_and_closed_hash:
-                graph_node = GraphNode(child_state, current_node, (i, j))
+                graph_node = BFSGraphNode(child_state, current_node, (i, j))
                 heapq.heappush(
-                    priority_nodes, (graph_node))
+                    priority_nodes, graph_node)
                 self.open_and_closed_hash.add(np.array2string(child_state))
 
         return priority_nodes
@@ -39,6 +42,3 @@ class BestFirstSearch(SearchFramework):
         while child_nodes:
             next_item = heapq.heappop(child_nodes)
             heapq.heappush(self.open_nodes, next_item)
-
-    def _append_closed_list(self, current_node):
-        self.closed_nodes.append(current_node)

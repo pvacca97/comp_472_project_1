@@ -34,7 +34,3 @@ class DepthFirstSearch(SearchFramework):
 
     def _add_children_to_open_list(self, child_nodes):
         self.open_nodes = child_nodes + self.open_nodes
-
-    def _append_closed_list(self, current_node):
-        # put node on closed list
-        self.closed_nodes.append(current_node)

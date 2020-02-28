@@ -3,6 +3,7 @@ import sys
 from board import create_board, touch_token
 from bfs import BestFirstSearch
 from dfs import DepthFirstSearch
+from astar import AStarSearch
 
 
 def write_files(func, solution_file, search_file):
@@ -38,14 +39,18 @@ for line in input_file:
     dfs_search_file = open(str(num_lines_in_file) + "_dfs_search.txt", "w")
     bfs_solution_file = open(str(num_lines_in_file) + "_bfs_solution.txt", "w")
     bfs_search_file = open(str(num_lines_in_file) + "_bfs_search.txt", "w")
+    astar_solution_file = open(str(num_lines_in_file) + "_astar_solution.txt", "w")
+    astar_search_file = open(str(num_lines_in_file) + "_astar_search.txt", "w")
     num_lines_in_file += 1
 
     board = create_board(n, values)
 
     bfs = BestFirstSearch(board, max_d, max_l)
     dfs = DepthFirstSearch(board, max_d, max_l)
+    astar = AStarSearch(board, max_d, max_l)
 
     write_files(dfs.template_method, dfs_solution_file, dfs_search_file)
     write_files(bfs.template_method, bfs_solution_file, bfs_search_file)
+    write_files(astar.template_method, astar_solution_file, astar_search_file)
 
 input_file.close()

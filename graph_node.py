@@ -20,6 +20,9 @@ class GraphNode:
         else:
             return self_hn < other_node_hn
 
+    def get_hash(self):
+        return np.array2string(self.state)
+
     def get_first_white_token_position(self):
         white_token_positions = np.where(self.state.flatten() == 0)
         first_white_token_position = white_token_positions[0][0] if len(
@@ -28,7 +31,7 @@ class GraphNode:
 
     # Returns the heuristic value for the node
     def get_hn(self):
-        return self.get_h1()
+        return self.get_h4()
 
     def get_fn(self):
         return self.get_hn() + (self.depth - 1)
@@ -174,3 +177,29 @@ class GraphNode:
             state_string += str(self.state[i][j])
 
         return '0 0 0 ' + state_string
+
+
+class BFSGraphNode(GraphNode):
+    def __init__(self, state, parent=None, last_touched_token=None):
+        super().__init__(state, parent, last_touched_token)
+
+    def __lt__(self, other_node):
+        self_hn = self.get_hn()
+        other_node_hn = other_node.get_hn()
+        if self_hn == other_node_hn:
+            return self.get_first_white_token_position() < other_node.get_first_white_token_position()
+        else:
+            return self_hn < other_node_hn
+
+
+class AStarGraphNode(GraphNode):
+    def __init__(self, state, parent=None, last_touched_token=None):
+        super().__init__(state, parent, last_touched_token)
+
+    def __lt__(self, other_node):
+        self_fn = self.get_fn()
+        other_node_fn = other_node.get_fn()
+        if self_fn == other_node_fn:
+            return self.get_first_white_token_position() < other_node.get_first_white_token_position()
+        else:
+            return self_fn < other_node_fn

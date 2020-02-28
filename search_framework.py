@@ -16,9 +16,9 @@ class SearchFramework(object):
         self.solution_path = None
 
     def template_method(self):
-        root_node = GraphNode(self.board)
+        root_node = self._get_root_node()
         # list of nodes to visit next, in order of priority
-        self.open_nodes = [root_node]
+        self._initiate_open_list(root_node)
         self.closed_nodes = []  # list of nodes already visited
         # keeps track of all nodes in open/closed lists
         self.open_and_closed_hash = set([np.array2string(root_node.state)])
@@ -51,6 +51,12 @@ class SearchFramework(object):
 
         return self.closed_nodes, self.solution_path
 
+    def _get_root_node(self):
+        return GraphNode(self.board)
+
+    def _initiate_open_list(self, root_node):
+        self.open_nodes = [root_node]
+
     @abc.abstractclassmethod
     def _get_next_open_list_node(self):
         pass
@@ -67,6 +73,5 @@ class SearchFramework(object):
     def _add_children_to_open_list(self, child_nodes):
         pass
 
-    @abc.abstractmethod
     def _append_closed_list(self, current_node):
-        pass
+        self.closed_nodes.append(current_node)
