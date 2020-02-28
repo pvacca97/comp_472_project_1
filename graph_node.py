@@ -12,14 +12,18 @@ class GraphNode:
         else:
             self.depth = parent.depth + 1
 
+    def __lt__(self, value):
+        return np.any(self.state < value.state)
+
     def get_first_white_token_position(self):
         white_token_positions = np.where(self.state.flatten() == 0)
-        first_white_token_position = white_token_positions[0][0] if len(white_token_positions[0]) != 0 else 9
+        first_white_token_position = white_token_positions[0][0] if len(
+            white_token_positions[0]) != 0 else 9
         return first_white_token_position
 
     # Returns the heuristic value for the node
     def get_hn(self):
-        return self.h1()
+        return self.get_h1()
 
     def get_fn(self):
         return self.get_hn() + (self.depth - 1)
@@ -86,7 +90,8 @@ class GraphNode:
         board_size = self.state.shape[0]
 
         # This set contains tuples for the coordinates of tokens that still need to be visited
-        tokens_to_visit = set([(row, column) for row in range(board_size) for column in range(board_size)])
+        tokens_to_visit = set([(row, column) for row in range(
+            board_size) for column in range(board_size)])
 
         # Contains tuples for the coordinates of tokens that have been visited
         visited_tokens = set([])
@@ -96,7 +101,8 @@ class GraphNode:
 
         while len(tokens_to_visit) != 0:
             token = tokens_to_visit.pop()
-            tokens_to_check_for_current_group = set([token])  # Next tokens to check for grouping of black tokens
+            # Next tokens to check for grouping of black tokens
+            tokens_to_check_for_current_group = set([token])
             black_token_group_size = 0
 
             # tokens_to_check will be zero when the boundaries of the black grouping is reached
@@ -115,25 +121,30 @@ class GraphNode:
                     # Token above
                     if row != 0 and (row - 1, column) not in visited_tokens and \
                             (row - 1, column) not in tokens_to_check_for_current_group:
-                        tokens_to_check_for_current_group.add((row - 1, column))
+                        tokens_to_check_for_current_group.add(
+                            (row - 1, column))
 
                     # Token below
                     if row != board_size - 1 and (row + 1, column) not in visited_tokens and \
                             (row + 1, column) not in tokens_to_check_for_current_group:
-                        tokens_to_check_for_current_group.add((row + 1, column))
+                        tokens_to_check_for_current_group.add(
+                            (row + 1, column))
 
                     # Token right
                     if column != 0 and (row, column - 1) not in visited_tokens and \
                             (row, column - 1) not in tokens_to_check_for_current_group:
-                        tokens_to_check_for_current_group.add((row, column - 1))
+                        tokens_to_check_for_current_group.add(
+                            (row, column - 1))
 
                     # Token left
                     if column != board_size - 1 and (row, column + 1) not in visited_tokens and \
                             (row, column + 1) not in tokens_to_check_for_current_group:
-                        tokens_to_check_for_current_group.add((row, column + 1))
+                        tokens_to_check_for_current_group.add(
+                            (row, column + 1))
 
             if black_token_group_size > 0:
-                black_token_group_sizes.append((black_token_group_size // 4) + 1)
+                black_token_group_sizes.append(
+                    (black_token_group_size // 4) + 1)
 
         return sum(black_token_group_sizes)
 
