@@ -1,5 +1,6 @@
 import abc
 import numpy as np
+
 from graph_node import GraphNode
 
 
@@ -26,18 +27,32 @@ class SearchFramework(object):
         board_size = root_node.state.shape[0]
         goal_state = np.zeros((board_size, board_size), dtype=np.uint8)
 
-        while len(self.open_nodes) != 0 and self.stop_search == False:
-            current_node = self._check_goal_state(goal_state)
+        while len(self.open_nodes) != 0:
+
+            # take first node in open list
+            current_node = self._get_next_open_list_node()
+
+            # return search path and solution path if goal is reached
+            if np.array_equal(current_node.state, goal_state):
+                current_solution_node = current_node
+                while current_solution_node is not None:
+                    self.solution_path.insert(0, current_solution_node)
+                    current_solution_node = current_solution_node.parent
+                self.closed_nodes.append(current_node)
+                return self.closed_nodes, self.solution_path
+
             is_max = self._check_max(current_node)
+            if self.stop_search:
+                break
             if not is_max:
                 child_nodes = self._generate_children(current_node, board_size)
-                self._order_children(child_nodes)
+                self._add_children_to_open_list(child_nodes)
             self._append_closed_list(current_node)
 
         return self.closed_nodes, self.solution_path
 
     @abc.abstractclassmethod
-    def _check_goal_state(self, goal_state):
+    def _get_next_open_list_node(self):
         pass
 
     @abc.abstractmethod
@@ -49,7 +64,7 @@ class SearchFramework(object):
         pass
 
     @abc.abstractmethod
-    def _order_children(self, child_nodes):
+    def _add_children_to_open_list(self, child_nodes):
         pass
 
     @abc.abstractmethod

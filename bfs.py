@@ -1,6 +1,7 @@
 import heapq
 import itertools
 import numpy as np
+
 from board import touch_token
 from graph_node import GraphNode
 from search_framework import SearchFramework
@@ -10,20 +11,8 @@ class BestFirstSearch(SearchFramework):
     def __init__(self, board, max_d, max_l):
         super().__init__(board, max_d, max_l)
 
-    def _check_goal_state(self, goal_state):
-        # take first node in open list and check for goal state
-        current_node = heapq.heappop(self.open_nodes)
-
-        # check if goal state
-        if np.array_equal(current_node.state, goal_state):
-            current_solution_node = current_node
-            while current_solution_node is not None:
-                self.solution_path.insert(0, current_solution_node)
-                current_solution_node = current_solution_node.parent
-            self.closed_nodes.append(current_node)
-            stop_search = True
-
-        return current_node
+    def _get_next_open_list_node(self):
+        return heapq.heappop(self.open_nodes)
 
     def _check_max(self, current_node):
         if len(self.closed_nodes) != self.max_l:
@@ -46,7 +35,7 @@ class BestFirstSearch(SearchFramework):
 
         return priority_nodes
 
-    def _order_children(self, child_nodes):
+    def _add_children_to_open_list(self, child_nodes):
         while child_nodes:
             next_item = heapq.heappop(child_nodes)
             heapq.heappush(self.open_nodes, next_item)

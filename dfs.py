@@ -10,26 +10,11 @@ class DepthFirstSearch(SearchFramework):
     def __init__(self, board, max_d, max_l):
         super().__init__(board, max_d, max_l)
 
-    def _check_goal_state(self, goal_state):
-        # take first node in open list and check for goal state
-        current_node = self.open_nodes.pop(0)
-
-        # check if goal state
-        if np.array_equal(current_node.state, goal_state):
-            current_solution_node = current_node
-            while current_solution_node is not None:
-                self.solution_path.insert(0, current_solution_node)
-                current_solution_node = current_solution_node.parent
-            self.closed_nodes.append(current_node)
-            self.stop_search = True
-
-        return current_node
+    def _get_next_open_list_node(self):
+        return self.open_nodes.pop(0)
 
     def _check_max(self, current_node):
-        if current_node.depth != self.max_d:
-            return False
-        else:
-            return True
+        return current_node.depth == self.max_d
 
     def _generate_children(self, current_node, board_size):
         child_nodes = []
@@ -42,11 +27,12 @@ class DepthFirstSearch(SearchFramework):
                 child_nodes.append(
                     GraphNode(child_state, current_node, (i, j)))
                 self.open_and_closed_hash.add(np.array2string(child_state))
-        return child_nodes
 
-    def _order_children(self, child_nodes):
         child_nodes.sort(
             key=lambda node: node.get_first_white_token_position())
+        return child_nodes
+
+    def _add_children_to_open_list(self, child_nodes):
         self.open_nodes = child_nodes + self.open_nodes
 
     def _append_closed_list(self, current_node):
