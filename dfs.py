@@ -21,7 +21,7 @@ class DepthFirstSearch(SearchFramework):
                 self.solution_path.insert(0, current_solution_node)
                 current_solution_node = current_solution_node.parent
             self.closed_nodes.append(current_node)
-            stop_search = True
+            self.stop_search = True
 
         return current_node
 
