@@ -86,7 +86,7 @@ class GraphNode:
         visited_tokens = set([])
 
         # List contains sizes of each grouping of black tokens found
-        black_token_group_sizes = []
+        black_token_group_values = []
 
         while len(tokens_left_to_visit) != 0:
             current_board_token = tokens_left_to_visit.pop()
@@ -129,9 +129,9 @@ class GraphNode:
                                 token_right not in current_group_open_set:
                             current_group_open_set.add(token_right)
 
-                black_token_group_sizes.append(int(math.ceil(current_group_size / 5)))
+                black_token_group_values.append(int(math.ceil(current_group_size / 5)))
 
-        return sum(black_token_group_sizes)
+        return sum(black_token_group_values)
 
     # Use the following for the lines in the solution file
     def get_solution_file_line(self):
