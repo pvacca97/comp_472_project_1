@@ -79,7 +79,7 @@ class GraphNode:
         board_size = self.state.shape[0]
 
         # This set contains tuples for the coordinates of tokens that still need to be visited
-        tokens_to_visit = set([(row, column) for row in range(
+        tokens_left_to_visit = set([(row, column) for row in range(
             board_size) for column in range(board_size)])
 
         # Contains tuples for the coordinates of tokens that have been visited
@@ -88,50 +88,48 @@ class GraphNode:
         # List contains sizes of each grouping of black tokens found
         black_token_group_sizes = []
 
-        while len(tokens_to_visit) != 0:
-            token = tokens_to_visit.pop()
-            # Next tokens to check for grouping of black tokens
-            tokens_to_check_for_current_group = set([token])
-            black_token_group_size = 0
+        while len(tokens_left_to_visit) != 0:
+            current_board_token = tokens_left_to_visit.pop()
 
-            # tokens_to_check will be zero when the boundaries of the black grouping is reached
-            while len(tokens_to_check_for_current_group) != 0:
-                current_token = tokens_to_check_for_current_group.pop()
-                tokens_to_visit = tokens_to_visit - set([current_token])
-                visited_tokens.add(current_token)
+            if self.state[current_board_token]:
+                # Next tokens to check for grouping of black tokens
+                current_group_open_set = set([current_board_token])
+                current_group_size = 0
 
-                row = current_token[0]
-                column = current_token[1]
+                # loop will end when the boundaries of the black grouping is reached
+                while len(current_group_open_set) != 0:
+                    current_group_token = current_group_open_set.pop()
+                    tokens_left_to_visit = tokens_left_to_visit - set([current_group_token])
+                    visited_tokens.add(current_group_token)
 
-                # If the current token is black, increase group size and check top/bottom left/right tokens
-                if self.state[row][column]:
-                    black_token_group_size += 1
+                    row = current_group_token[0]
+                    column = current_group_token[1]
 
-                    # Token above
-                    if row != 0 and (row - 1, column) not in visited_tokens and \
-                            (row - 1, column) not in tokens_to_check_for_current_group:
-                        tokens_to_check_for_current_group.add(
-                            (row - 1, column))
+                    # If the token is black, increase group size and add top/bottom left/right tokens to open list
+                    if self.state[current_group_token]:
+                        current_group_size += 1
 
-                    # Token below
-                    if row != board_size - 1 and (row + 1, column) not in visited_tokens and \
-                            (row + 1, column) not in tokens_to_check_for_current_group:
-                        tokens_to_check_for_current_group.add(
-                            (row + 1, column))
+                        token_above = (row - 1, column)
+                        if row != 0 and token_above not in visited_tokens and \
+                                token_above not in current_group_open_set:
+                            current_group_open_set.add(token_above)
 
-                    # Token right
-                    if column != 0 and (row, column - 1) not in visited_tokens and \
-                            (row, column - 1) not in tokens_to_check_for_current_group:
-                        tokens_to_check_for_current_group.add(
-                            (row, column - 1))
+                        token_below = (row + 1, column)
+                        if row != board_size - 1 and token_below not in visited_tokens and \
+                                token_below not in current_group_open_set:
+                            current_group_open_set.add(token_below)
 
-                    # Token left
-                    if column != board_size - 1 and (row, column + 1) not in visited_tokens and \
-                            (row, column + 1) not in tokens_to_check_for_current_group:
-                        tokens_to_check_for_current_group.add(
-                            (row, column + 1))
+                        token_left = (row, column - 1)
+                        if column != 0 and token_left not in visited_tokens and \
+                                token_left not in current_group_open_set:
+                            current_group_open_set.add(token_left)
 
-            black_token_group_sizes.append(int(math.ceil(black_token_group_size / 5)))
+                        token_right = (row, column + 1)
+                        if column != board_size - 1 and token_right not in visited_tokens and \
+                                token_right not in current_group_open_set:
+                            current_group_open_set.add(token_right)
+
+                black_token_group_sizes.append(int(math.ceil(current_group_size / 5)))
 
         return sum(black_token_group_sizes)
 
