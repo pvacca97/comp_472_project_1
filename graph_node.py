@@ -32,7 +32,7 @@ class GraphNode:
 
     # Returns the heuristic value for the node
     def get_hn(self):
-        return self.get_h4()
+        return self.get_h3()
 
     def get_gn(self):
         return self.depth - 1
@@ -44,60 +44,38 @@ class GraphNode:
     def get_h1(self):
         return np.count_nonzero(self.state == 1)
 
-    def get_h2(self):
-        heuristic_value = 0
-        board_size = self.state.shape[0]
+    # # ****non admissible****
+    # def get_h2(self):
+    #     heuristic_value = 0
+    #     board_size = self.state.shape[0]
+    #
+    #     for row, column in itertools.product(range(board_size), range(board_size)):
+    #         max_num_of_points = 6  # is equal to num of tokens to be compared + 1
+    #         token_value = 1
+    #         if self.state[row][column] == 0:
+    #             token_value += 1
+    #         if row != 0 and self.state[row - 1][column] == 0:
+    #             token_value += 1
+    #         else:
+    #             max_num_of_points -= 1
+    #         if row != board_size - 1 and self.state[row + 1][column] == 0:
+    #             token_value += 1
+    #         else:
+    #             max_num_of_points -= 1
+    #         if column != 0 and self.state[row][column - 1] == 0:
+    #             token_value += 1
+    #         else:
+    #             max_num_of_points -= 1
+    #         if column != board_size - 1 and self.state[row][column + 1] == 0:
+    #             token_value += 1
+    #         else:
+    #             max_num_of_points -= 1
+    #         heuristic_value += token_value % max_num_of_points
+    #     return heuristic_value
 
-        for row, column in itertools.product(range(board_size), range(board_size)):
-            max_num_of_points = 6  # num of tokens to be compared + 1
-            token_value = 1
-            if self.state[row][column] == 0:
-                token_value += 1
-            if row != 0 and self.state[row - 1][column] == 0:
-                token_value += 1
-            else:
-                max_num_of_points -= 1
-            if row != board_size - 1 and self.state[row + 1][column] == 0:
-                token_value += 1
-            else:
-                max_num_of_points -= 1
-            if column != 0 and self.state[row][column - 1] == 0:
-                token_value += 1
-            else:
-                max_num_of_points -= 1
-            if column != board_size - 1 and self.state[row][column + 1] == 0:
-                token_value += 1
-            else:
-                max_num_of_points -= 1
-            heuristic_value += token_value % max_num_of_points
-        return heuristic_value
-
-    # 0, 1, 2 heuristic
-    def get_h3(self):
-        heuristic_value = 0
-        board_size = self.state.shape[0]
-        for row, column in itertools.product(range(board_size), range(board_size)):
-            tokens_to_compare = [self.state[row][column]]
-            if row != 0:
-                tokens_to_compare.append(self.state[row - 1][column])
-            if row != board_size - 1:
-                tokens_to_compare.append(self.state[row + 1][column])
-            if column != 0:
-                tokens_to_compare.append(self.state[row][column - 1])
-            if column != board_size - 1:
-                tokens_to_compare.append(self.state[row][column + 1])
-
-            if all(token == 0 for token in tokens_to_compare):
-                continue
-            if all(token == 1 for token in tokens_to_compare):
-                heuristic_value += 1
-            else:
-                heuristic_value += 2
-
-        return heuristic_value
 
     # heuristic based on number of black token groups, and their size
-    def get_h4(self):
+    def get_h3(self):
         board_size = self.state.shape[0]
 
         # This set contains tuples for the coordinates of tokens that still need to be visited
