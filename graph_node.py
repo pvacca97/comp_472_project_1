@@ -153,7 +153,7 @@ class GraphNode:
                         tokens_to_check_for_current_group.add(
                             (row, column + 1))
 
-            black_token_group_sizes.append(int(math.ceil(black_token_group_size / 4)))
+            black_token_group_sizes.append(int(math.ceil(black_token_group_size / 5)))
 
         return sum(black_token_group_sizes)
 
