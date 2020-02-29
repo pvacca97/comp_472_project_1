@@ -31,6 +31,8 @@ class SearchFramework(object):
 
             # take first node in open list
             current_node = self._get_next_open_list_node()
+            if current_node is None:
+                break
 
             # return search path and solution path if goal is reached
             if np.array_equal(current_node.state, goal_state):
@@ -47,7 +49,7 @@ class SearchFramework(object):
             if not is_max:
                 child_nodes = self._generate_children(current_node, board_size)
                 self._add_children_to_open_list(child_nodes)
-            self._append_closed_list(current_node)
+            self.closed_nodes.append(current_node)
 
         return self.closed_nodes, self.solution_path
 
@@ -72,6 +74,3 @@ class SearchFramework(object):
     @abc.abstractmethod
     def _add_children_to_open_list(self, child_nodes):
         pass
-
-    def _append_closed_list(self, current_node):
-        self.closed_nodes.append(current_node)
