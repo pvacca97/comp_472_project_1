@@ -28,7 +28,8 @@ class DepthFirstSearch(SearchFramework):
                     GraphNode(child_state, current_node, (i, j)))
                 self.open_and_closed_hash.add(np.array2string(child_state))
 
-        child_nodes.sort()
+        child_nodes.sort(
+            key=lambda node: node.get_white_token_positions()[0])
         return child_nodes
 
     def _add_children_to_open_list(self, child_nodes):
