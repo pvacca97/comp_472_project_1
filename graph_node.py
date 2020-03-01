@@ -13,22 +13,33 @@ class GraphNode:
         else:
             self.depth = parent.depth + 1
 
-    def __lt__(self, other_node):
-        self_hn = self.get_hn()
-        other_node_hn = other_node.get_hn()
-        if self_hn == other_node_hn:
-            return self.get_first_white_token_position() < other_node.get_first_white_token_position()
-        else:
-            return self_hn < other_node_hn
+    def __lt__(self, other):
+        self_white_token_positions = self.get_white_token_positions()
+        self_positions_len = len(self_white_token_positions)
+        other_white_token_positions = other.get_white_token_positions()
+        other_positions_len = len(other_white_token_positions)
+
+        min_length = min(self_positions_len, other_positions_len)
+
+        for i in range(min_length):
+            if self_white_token_positions[i] < other_white_token_positions[i]:
+                return True
+            if self_white_token_positions[i] > other_white_token_positions[i]:
+                return False
+
+        if self_positions_len > other_positions_len:
+            return True
+        if self_positions_len < other_positions_len:
+            return False
+
+        return False
 
     def get_hash(self):
         return np.array2string(self.state)
 
-    def get_first_white_token_position(self):
+    def get_white_token_positions(self):
         white_token_positions = np.where(self.state.flatten() == 0)
-        first_white_token_position = white_token_positions[0][0] if len(
-            white_token_positions[0]) != 0 else 9
-        return first_white_token_position
+        return white_token_positions[0]
 
     # Returns the heuristic value for the node
     def get_hn(self):
@@ -40,9 +51,10 @@ class GraphNode:
     def get_fn(self):
         return self.get_hn() + self.get_gn()
 
+    # # ****non admissible****
     # This returns the number of black dots on the board
-    def get_h1(self):
-        return np.count_nonzero(self.state == 1)
+    # def get_h1(self):
+    #     return np.count_nonzero(self.state == 1)
 
     # # ****non admissible****
     # def get_h2(self):
@@ -72,7 +84,6 @@ class GraphNode:
     #             max_num_of_points -= 1
     #         heuristic_value += token_value % max_num_of_points
     #     return heuristic_value
-
 
     # heuristic based on number of black token groups, and their size
     def get_h3(self):
@@ -160,11 +171,11 @@ class BFSGraphNode(GraphNode):
     def __init__(self, state, parent=None, last_touched_token=None):
         super().__init__(state, parent, last_touched_token)
 
-    def __lt__(self, other_node):
+    def __lt__(self, other):
         self_hn = self.get_hn()
-        other_node_hn = other_node.get_hn()
+        other_node_hn = other.get_hn()
         if self_hn == other_node_hn:
-            return self.get_first_white_token_position() < other_node.get_first_white_token_position()
+            return super().__lt__(other)
         else:
             return self_hn < other_node_hn
 
@@ -181,11 +192,11 @@ class AStarGraphNode(GraphNode):
     def __init__(self, state, parent=None, last_touched_token=None):
         super().__init__(state, parent, last_touched_token)
 
-    def __lt__(self, other_node):
+    def __lt__(self, other):
         self_fn = self.get_fn()
-        other_node_fn = other_node.get_fn()
+        other_node_fn = other.get_fn()
         if self_fn == other_node_fn:
-            return self.get_first_white_token_position() < other_node.get_first_white_token_position()
+            return super().__lt__(other)
         else:
             return self_fn < other_node_fn
 
