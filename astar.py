@@ -35,11 +35,6 @@ class AStarSearch(SearchFramework):
         else:
             self.stop_search = True
 
-    def _should_generate_children(self, current_node):
-        # only generate children if current node's g(n) is the smallest found g(n) for its board state
-
-        return current_node.get_gn() == board_state_entry['g_value']
-
     def _generate_children(self, current_node, board_size):
         child_nodes = []
         # generate children of current node
@@ -56,7 +51,7 @@ class AStarSearch(SearchFramework):
 
             # If the child state is already in the dict, and the dict conatins a smaller g(n),
             # don't add child node to open list
-            elif board_state_entry['g_value'] < child_state_gn:
+            elif board_state_entry['g_value'] <= child_state_gn:
                 continue
 
             child_nodes.append(AStarGraphNode(child_state, current_node, (i, j)))
