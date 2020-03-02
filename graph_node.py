@@ -41,6 +41,12 @@ class GraphNode:
         white_token_positions = np.where(self.state.flatten() == 0)
         return white_token_positions[0]
 
+    def get_first_white_token_position(self):
+        white_token_positions = np.where(self.state.flatten() == 0)
+        first_white_token_position = white_token_positions[0][0] if len(
+            white_token_positions[0]) != 0 else 9
+        return first_white_token_position
+
     # Returns the heuristic value for the node
     def get_hn(self):
         return self.get_h3()
@@ -51,39 +57,39 @@ class GraphNode:
     def get_fn(self):
         return self.get_hn() + self.get_gn()
 
-    # # ****non admissible****
+    # ****non admissible****
     # This returns the number of black dots on the board
-    # def get_h1(self):
-    #     return np.count_nonzero(self.state == 1)
+    def get_h1(self):
+        return np.count_nonzero(self.state == 1)
 
-    # # ****non admissible****
-    # def get_h2(self):
-    #     heuristic_value = 0
-    #     board_size = self.state.shape[0]
-    #
-    #     for row, column in itertools.product(range(board_size), range(board_size)):
-    #         max_num_of_points = 6  # is equal to num of tokens to be compared + 1
-    #         token_value = 1
-    #         if self.state[row][column] == 0:
-    #             token_value += 1
-    #         if row != 0 and self.state[row - 1][column] == 0:
-    #             token_value += 1
-    #         else:
-    #             max_num_of_points -= 1
-    #         if row != board_size - 1 and self.state[row + 1][column] == 0:
-    #             token_value += 1
-    #         else:
-    #             max_num_of_points -= 1
-    #         if column != 0 and self.state[row][column - 1] == 0:
-    #             token_value += 1
-    #         else:
-    #             max_num_of_points -= 1
-    #         if column != board_size - 1 and self.state[row][column + 1] == 0:
-    #             token_value += 1
-    #         else:
-    #             max_num_of_points -= 1
-    #         heuristic_value += token_value % max_num_of_points
-    #     return heuristic_value
+    # ****non admissible****
+    def get_h2(self):
+        heuristic_value = 0
+        board_size = self.state.shape[0]
+
+        for row, column in itertools.product(range(board_size), range(board_size)):
+            max_num_of_points = 6  # is equal to num of tokens to be compared + 1
+            token_value = 1
+            if self.state[row][column] == 0:
+                token_value += 1
+            if row != 0 and self.state[row - 1][column] == 0:
+                token_value += 1
+            else:
+                max_num_of_points -= 1
+            if row != board_size - 1 and self.state[row + 1][column] == 0:
+                token_value += 1
+            else:
+                max_num_of_points -= 1
+            if column != 0 and self.state[row][column - 1] == 0:
+                token_value += 1
+            else:
+                max_num_of_points -= 1
+            if column != board_size - 1 and self.state[row][column + 1] == 0:
+                token_value += 1
+            else:
+                max_num_of_points -= 1
+            heuristic_value += token_value % max_num_of_points
+        return heuristic_value
 
     # heuristic based on number of black token groups, and their size
     def get_h3(self):
